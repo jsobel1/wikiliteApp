@@ -11,6 +11,7 @@
 # =============================================================================
 
 suppressPackageStartupMessages(library(wikiliteApp))
+suppressPackageStartupMessages(library(echarts4r))
 
 has_DT   <- requireNamespace("DT",       quietly = TRUE)
 has_xlsx <- requireNamespace("openxlsx", quietly = TRUE)
