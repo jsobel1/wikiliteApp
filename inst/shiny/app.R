@@ -10,8 +10,24 @@
 #   [Right]     Revision selector, wikitext (coloured by author), diff panel
 # =============================================================================
 
-suppressPackageStartupMessages(library(wikiliteApp))
-suppressPackageStartupMessages(library(echarts4r))
+suppressPackageStartupMessages({
+  library(wikiliteApp)
+  library(shiny)
+  library(dplyr)
+  library(tidyr)
+  library(ggplot2)
+  library(plotly)
+  library(echarts4r)
+  library(htmltools)
+  library(jsonlite)
+  library(scales)
+  library(purrr)
+  library(forcats)
+  library(tibble)
+  library(zoo)
+  library(ggalluvial)
+  library(stringr)
+})
 
 has_DT   <- requireNamespace("DT",       quietly = TRUE)
 has_xlsx <- requireNamespace("openxlsx", quietly = TRUE)
