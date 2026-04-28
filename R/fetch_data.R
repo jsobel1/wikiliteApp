@@ -78,6 +78,11 @@ prepare_history <- function(hist, n_top = 12) {
 
 #' Fetch and prepare histories for a vector of articles
 #'
+#' Emits per-article progress when run inside a Shiny session (via
+#' \code{shiny::withProgress()} / \code{incProgress()} so end-users see a
+#' progress bar with a percentage + per-article detail), and falls back to
+#' \code{cli} progress on the console otherwise.
+#'
 #' @param articles  Character vector of Wikipedia article titles.
 #' @param date_an   Upper timestamp.
 #' @param lang      Language edition.
@@ -89,10 +94,39 @@ fetch_many <- function(articles,
                        date_an   = "2026-01-01T00:00:00Z",
                        lang      = "en",
                        cache_dir = "cache") {
-  setNames(
-    lapply(articles, function(a) {
-      prepare_history(fetch_history(a, date_an, lang, cache_dir))
-    }),
-    articles
-  )
+  n <- length(articles)
+  if (n == 0L) return(setNames(list(), character()))
+
+  in_shiny <- requireNamespace("shiny", quietly = TRUE) &&
+              isTRUE(tryCatch(shiny::isRunning(), error = function(e) FALSE))
+
+  one <- function(a, i) {
+    detail <- sprintf("[%d/%d] %s", i, n, a)
+    if (in_shiny) {
+      shiny::incProgress(1 / n, detail = detail)
+    } else {
+      message("  ", detail)
+    }
+    prepare_history(fetch_history(a, date_an, lang, cache_dir))
+  }
+
+  if (in_shiny) {
+    shiny::withProgress(
+      message = "Fetching Wikipedia histories",
+      detail  = sprintf("0 / %d", n),
+      value   = 0,
+      {
+        out <- setNames(
+          lapply(seq_along(articles), function(i) one(articles[[i]], i)),
+          articles
+        )
+      }
+    )
+  } else {
+    out <- setNames(
+      lapply(seq_along(articles), function(i) one(articles[[i]], i)),
+      articles
+    )
+  }
+  out
 }
