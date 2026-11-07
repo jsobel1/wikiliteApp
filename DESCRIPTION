@@ -2,7 +2,7 @@ Package: wikiliteApp
 Title: Wikipedia History Flow — Interactive Shiny Application
 Version: 0.1.0
 Authors@R: person("Jonathan", "Sobel", email = "jsobel83@gmail.com",
-    role = c("aut", "cre"), comment = c(ORCID = ""))
+    role = c("aut", "cre"), comment = c(ORCID = "0000-0002-5111-4070"))
 Description: An interactive Shiny application for exploring Wikipedia article
     revision history, citation structure, editor behaviour, content stability,
     and vandalism patterns.  Implements an approximation of the Microsoft
